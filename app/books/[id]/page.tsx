@@ -65,9 +65,11 @@ export default function BookPage() {
         e.preventDefault();
     
         let token = localStorage.getItem("access_token");
+    
+        // ✅ If token is missing, try refreshing
         if (!token) {
-            console.log("🔄 Token expired, attempting refresh...");
-            token = await refreshAccessToken(); // Try refreshing token
+            console.log("⚠️ Token missing, trying refresh...");
+            token = await refreshAccessToken();
             if (!token) {
                 alert("Session expired. Please log in again.");
                 router.push("/login");
@@ -75,25 +77,26 @@ export default function BookPage() {
             }
         }
     
-        // Debugging: Log the token before sending
         console.log("📤 Sending request with Token:", token);
     
-        const reviewData = {
-            book: params.id,
-            rating,
-            comment,
-        };
-    
         try {
-            const response = await API.post("/reviews/", reviewData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,  // ✅ Ensure correct format
-                    "Content-Type": "application/json",
+            const response = await API.post(
+                "/reviews/",
+                {
+                    book: params.id, // ✅ Do NOT send 'user' manually
+                    rating,
+                    comment,
                 },
-            });
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // ✅ Send token properly
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
     
             console.log("✅ Review Submitted Successfully:", response.data);
-            setReviews([...reviews, response.data]);
+            setReviews([...reviews, response.data]); // Update state
             setRating(0);
             setComment("");
             setMessage("Review submitted successfully!");
@@ -104,13 +107,24 @@ export default function BookPage() {
                 console.error("🔍 Full error response:", error.response.data);
                 console.error("🔍 Status:", error.response.status);
     
+                // ✅ If 401 Unauthorized, refresh token and retry
                 if (error.response.status === 401) {
-                    alert("Your session has expired. Please log in again.");
-                    router.push("/login");
+                    console.log("⚠️ Token expired, attempting refresh...");
+                    token = await refreshAccessToken();
+    
+                    if (token) {
+                        console.log("🔄 Retrying request with new token...");
+                        return handleSubmitReview(e); // Retry submission
+                    } else {
+                        alert("Session expired. Please log in again.");
+                        router.push("/login");
+                    }
                 }
             }
         }
     };
+    
+    
     
     
        
