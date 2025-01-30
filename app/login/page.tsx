@@ -15,59 +15,71 @@ export default function Login() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await API.post("/token/", {
-                username,
-                password,
-            });
+            const response = await API.post("/token/", { username, password });
             localStorage.setItem("access_token", response.data.access);
             localStorage.setItem("refresh_token", response.data.refresh);
-            localStorage.setItem("is_staff", response.data.is_staff ? "true" : "false"); // Ensure string storage
-            setIsLoggedIn(true); // Update global state
+            localStorage.setItem("is_staff", response.data.is_staff ? "true" : "false"); 
+            setIsLoggedIn(true);
 
             if (response.data.is_staff) {
-                router.push("/admin"); // Redirect admin to admin page
+                router.push("/admin");
             } else {
-                router.push("/books"); // Redirect non-admins to home page
+                router.push("/books");
             }
         } catch (error: any) {
-            setMessage(error.response?.data?.detail || "Login failed");
+            setMessage(error.response?.data?.detail || "Invalid username or password");
         }
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen">
-            <h1 className="text-3xl font-bold mb-4">Login</h1>
-            <form onSubmit={handleLogin} className="w-full max-w-sm">
-                <input
-                    type="text"
-                    placeholder="Username"
-                    className="block w-full px-4 py-2 mb-4 border rounded"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-                <input
-                    type="password"
-                    placeholder="Password"
-                    className="block w-full px-4 py-2 mb-4 border rounded"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <button className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        <div className="flex flex-col items-center  h-screen bg-gray-100 px-6 py-6 pt-24">
+            <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-md">
+                {/* Title */}
+                <h1 className="text-3xl font-bold text-primary text-center mb-4">
                     Login
-                </button>
-            </form>
-            {message && <p className="mt-4">{message}</p>}
-
-            {/* Register Link */}
-            <p className="mt-6 text-gray-600">
-                Don't have an account?{" "}
-                <span
-                    onClick={() => router.push("/register")}
-                    className="text-blue-600 cursor-pointer hover:underline"
-                >
-                    Click to register
-                </span>
-            </p>
+                </h1>
+                
+                {/* Login Form */}
+                <form onSubmit={handleLogin} className="space-y-4">
+                    <input
+                        type="text"
+                        placeholder="Username"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <input
+                        type="password"
+                        placeholder="Password"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button
+                        type="submit"
+                        className="w-full bg-primary text-white py-3 rounded-lg font-bold text-lg hover:bg-blue-900 transition duration-300"
+                    >
+                        Login
+                    </button>
+                </form>
+    
+                {/* Error Message */}
+                {message && (
+                    <p className="mt-4 text-red-600 text-center font-semibold">{message}</p>
+                )}
+    
+                {/* Register Link */}
+                <p className="mt-6 text-gray-700 text-center">
+                    Don't have an account?{" "}
+                    <span
+                        onClick={() => router.push("/register")}
+                        className="text-primary font-bold cursor-pointer hover:underline"
+                    >
+                        Register Now
+                    </span>
+                </p>
+            </div>
         </div>
     );
+    
 }

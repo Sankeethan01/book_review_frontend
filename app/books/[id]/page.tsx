@@ -10,38 +10,10 @@ export default function BookPage() {
     const [reviews, setReviews] = useState<any[]>([]);
     const [rating, setRating] = useState<number>(0);
     const [comment, setComment] = useState("");
-    const [message, setMessage] = useState(""); // Submission message
+    const [message, setMessage] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
     const router = useRouter();
     const params = useParams();
-
-    // Refresh token function
-    const refreshAccessToken = async () => {
-        try {
-            const refreshToken = localStorage.getItem("refresh_token");
-    
-            console.log("🔄 Attempting to refresh token using refresh_token:", refreshToken);
-    
-            if (!refreshToken) {
-                console.error("🚨 No refresh token found. Redirecting to login...");
-                router.push("/login");
-                return null;
-            }
-    
-            const response = await API.post("/token/refresh/", { refresh: refreshToken });
-    
-            console.log("✅ Token refresh successful. New Access Token:", response.data.access);
-    
-            const newAccessToken = response.data.access;
-            localStorage.setItem("access_token", newAccessToken);
-            return newAccessToken;
-        } catch (error) {
-            console.error("❌ Error refreshing token:", error.response?.data || error.message);
-            router.push("/login"); // Redirect to login if refresh fails
-            return null;
-        }
-    };
-    
-    
 
     // Fetch book details and reviews
     useEffect(() => {
@@ -65,72 +37,42 @@ export default function BookPage() {
         e.preventDefault();
     
         let token = localStorage.getItem("access_token");
-    
-        // ✅ If token is missing, try refreshing
         if (!token) {
-            console.log("⚠️ Token missing, trying refresh...");
-            token = await refreshAccessToken();
-            if (!token) {
-                alert("Session expired. Please log in again.");
-                router.push("/login");
-                return;
-            }
+            alert("Session expired. Please log in again.");
+            router.push("/login");
+            return;
         }
-    
-        console.log("📤 Sending request with Token:", token);
-    
+
+        const reviewData = {
+            book: params.id,
+            rating,
+            comment,
+        };
+
         try {
-            const response = await API.post(
-                "/reviews/",
-                {
-                    book: params.id, // ✅ Do NOT send 'user' manually
-                    rating,
-                    comment,
+            const response = await API.post("/reviews/", reviewData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
                 },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`, // ✅ Send token properly
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-    
-            console.log("✅ Review Submitted Successfully:", response.data);
-            setReviews([...reviews, response.data]); // Update state
+            });
+
+            setReviews([...reviews, response.data]);
             setRating(0);
             setComment("");
             setMessage("Review submitted successfully!");
+            setIsModalOpen(false); // Close modal after submission
         } catch (error: any) {
-            console.error("❌ Error submitting review:", error);
-    
-            if (error.response) {
-                console.error("🔍 Full error response:", error.response.data);
-                console.error("🔍 Status:", error.response.status);
-    
-                // ✅ If 401 Unauthorized, refresh token and retry
-                if (error.response.status === 401) {
-                    console.log("⚠️ Token expired, attempting refresh...");
-                    token = await refreshAccessToken();
-    
-                    if (token) {
-                        console.log("🔄 Retrying request with new token...");
-                        return handleSubmitReview(e); // Retry submission
-                    } else {
-                        alert("Session expired. Please log in again.");
-                        router.push("/login");
-                    }
-                }
+            console.error("Error submitting review:", error);
+            if (error.response?.status === 401) {
+                alert("Your session has expired. Please log in again.");
+                router.push("/login");
             }
         }
     };
-    
-    
-    
-    
-       
 
     if (!book) {
-        return <div>Loading...</div>;
+        return <div className="text-center text-lg p-6">Loading...</div>;
     }
 
     return (
@@ -146,63 +88,105 @@ export default function BookPage() {
                         className="rounded-lg"
                     />
                 </div>
-                <div>
+                <div className="bg-gray-50 py-16 px-4">
                     <h1 className="text-4xl font-bold mb-4">{book.title}</h1>
-                    <p className="text-xl text-gray-700 mb-2">Author: {book.author}</p>
-                    <p className="text-lg text-gray-600 mb-2">Genre: {book.genre}</p>
-                    <p className="text-gray-500">{book.description}</p>
+    
+                    {/* Author & Genre with Different Colors */}
+                    <p className="text-xl font-bold text-black-800 mb-2">
+                        Author: <span className="text-gery">{book.author}</span>
+                    </p>
+                    <p className="text-lg font-bold text-black mb-2">
+                        Genre: <span className="text-grey">{book.genre}</span>
+                    </p>
+
+                    <p className="text-gray-500 mt-3">{book.description}</p>
+
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="bg-primary text-white px-4 py-2 mt-6 rounded hover:bg-blue-700 transition duration-300">
+                        Add Review
+                    </button>
                 </div>
+
+                
             </div>
 
             {/* Reviews Section */}
             <div className="mb-8">
-                <h2 className="text-3xl font-bold mb-4">Reviews</h2>
-                {reviews.length === 0 ? (
-                    <p className="text-gray-500">No reviews yet. Be the first to review this book!</p>
-                ) : (
-                    reviews.map((review) => (
-                        <div key={review.id} className="border-b py-4">
-                            <p className="text-lg font-semibold">Rating: {review.rating}/5</p>
-                            <p className="text-gray-600">{review.comment}</p>
-                        </div>
-                    ))
-                )}
-            </div>
+                {/* <h2 className="text-3xl font-bold mb-4">Reviews</h2> */}
 
-            {/* Write a Review Section */}
-            <div>
-                <h2 className="text-3xl font-bold mb-4">Write a Review</h2>
-                <form onSubmit={handleSubmitReview} className="space-y-4">
-                    <div>
-                        <label className="block text-lg font-semibold mb-2">Rating</label>
-                        <input
-                            type="number"
-                            min="1"
-                            max="5"
-                            value={rating}
-                            onChange={(e) => setRating(Number(e.target.value))}
-                            className="block w-full px-4 py-2 border rounded"
-                            required
-                        />
+                {/* Add Review Button */}
+                
+
+                {/* Modal for Review Form */}
+                {isModalOpen && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                            <h2 className="text-2xl font-bold mb-4">Write a Review</h2>
+                            <form onSubmit={handleSubmitReview} className="space-y-4">
+                                <div>
+                                    <label className="block text-lg font-semibold mb-2">Rating</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max="5"
+                                        value={rating}
+                                        onChange={(e) => setRating(Number(e.target.value))}
+                                        className="block w-full px-4 py-2 border rounded"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-lg font-semibold mb-2">Comment</label>
+                                    <textarea
+                                        value={comment}
+                                        onChange={(e) => setComment(e.target.value)}
+                                        className="block w-full px-4 py-2 border rounded"
+                                        rows={4}
+                                        required
+                                    ></textarea>
+                                </div>
+                                <div className="flex justify-between">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsModalOpen(false)}
+                                        className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                                    >
+                                        Submit Review
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div>
-                        <label className="block text-lg font-semibold mb-2">Comment</label>
-                        <textarea
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
-                            className="block w-full px-4 py-2 border rounded"
-                            rows={4}
-                            required
-                        ></textarea>
-                    </div>
-                    <button
-                        type="submit"
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                    >
-                        Submit Review
-                    </button>
-                </form>
-                {message && <p className="mt-4 text-green-500">{message}</p>}
+                )}
+
+                {/* Reviews List */}
+                    {reviews.length === 0 ? (
+                        <p className="text-primary mt-4">No reviews yet. Be the first to review this book!</p>
+                    ) : (
+                        <div className="mt-6 space-y-4">
+                            <p className="font-bold text-primary text-3xl">Reviews</p>
+                            {reviews.map((review) => (
+                                <div key={review.id} className="border p-4 rounded-lg shadow">
+                                    {/* Display Star Rating */}
+                                    <p className="text-lg font-semibold flex items-center">
+                                        Rating: 
+                                        <span className="text-yellow-500 ml-2">
+                                            {"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}
+                                        </span>
+                                    </p>
+                                    <p className="text-gray-600">{review.comment}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
             </div>
         </div>
     );

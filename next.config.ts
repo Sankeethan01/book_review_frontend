@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
       "encrypted-tbn0.gstatic.com", // Google-hosted images
       "books.google.com", // Google Books API
       "lh3.googleusercontent.com", // Google-related images
+      "m.media-amazon.com",
+      "img.pikbest.com"
     ],
   },
 };

@@ -20,26 +20,33 @@ export default function AdminDashboard() {
     }, [router]);
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div className="text-center text-xl font-semibold p-6">Loading...</div>;
     }
 
     return (
-        <div className="p-6">
-            <h1 className="text-4xl font-bold mb-4">Admin Dashboard</h1>
-            <div className="space-y-4">
-                <a
-                    href="/admin/books"
-                    className="block bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+        <section className="relative w-full h-screen flex items-center justify-center">
+            {/* Background Image */}
+            <img
+                src="https://miro.medium.com/v2/resize:fit:5120/1*42ebJizcUtZBNIZPmmMZ5Q.jpeg"
+                alt="Bookshelf Background"
+                className="absolute top-0 left-0 w-full h-full object-cover opacity-80"
+            />
+
+            {/* Overlay for Buttons */}
+            <div className="relative z-10 flex  items-center space-x-4">
+                <button
+                    onClick={() => router.push("/admin/manage-books")}
+                    className="w-64 bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300"
                 >
                     Manage Books
-                </a>
-                <a
-                    href="/admin/reviews"
-                    className="block bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+                </button>
+                <button
+                    onClick={() => router.push("/admin/manage-reviews")}
+                    className="w-64 bg-green-600 text-white py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-green-700 transition duration-300"
                 >
                     Manage Reviews
-                </a>
+                </button>
             </div>
-        </div>
+        </section>
     );
 }

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import API from "@/utils/api";
 import Image from "next/image";
+import Navbar from "@/components/Navbar";
 
 export default function Books() {
   const [books, setBooks] = useState([]); // State to store books
@@ -39,8 +40,11 @@ export default function Books() {
   }, [router]);
 
   return (
+    <>
+    
+    
     <div className="p-6">
-      <h1 className="text-4xl font-bold mb-6">Books</h1>
+      <h1 className="text-4xl text-center text-blue-900 font-bold text- mb-6">Books</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {books.map((book: any) => (
           <div
@@ -60,8 +64,8 @@ export default function Books() {
             )}
             <div className="p-4">
               <h2 className="text-xl font-bold">{book.title}</h2>
-              <p className="text-gray-700">Author: {book.author}</p>
-              <p className="text-gray-600">Genre: {book.genre}</p>
+              <p className="font-bold text-gray-700">Author: {book.author}</p>
+              <p className="font-bold text-gray-600">Genre: {book.genre}</p>
               <p className="text-gray-500 mt-2">
                 {book.description.slice(0, 100)}...
               </p>
@@ -70,5 +74,6 @@ export default function Books() {
         ))}
       </div>
     </div>
+    </>
   );
 }
