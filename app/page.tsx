@@ -1,20 +1,26 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
-
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-5xl font-bold text-blue-600 mb-4">
-        Welcome to Book Review!
-      </h1>
-      <p className="text-lg text-gray-700">
-        Discover, share, and review your favorite books.
-      </p>
-      <div className="mt-6">
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700">
+    <section className="relative bg-white">
+    <Image
+      src="https://img.pikbest.com/wp/202405/device-mobile-technology-enabled-learning-3d-and-books-on-shelves-for-online-education_9794670.jpg!f305cw"
+      alt="Bookshelf Background"
+      layout="responsive"
+      width={1000}
+      height={400}
+      className="opacity-250"
+    />
+    <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+      <h2 className="text-6xl font-bold text-primary">WELCOME TO BOOK REVIEW</h2>
+      
+      <Link href="/books">
+        <button className="mt-4 px-6 py-4 font-bold text-lg bg-primary text-white rounded-full hover:bg-blue-700">
           Explore Books
         </button>
-      </div>
+      </Link>
     </div>
+  </section>
   );
 }
