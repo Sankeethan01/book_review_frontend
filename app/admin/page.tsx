@@ -1,52 +1,35 @@
 "use client";
-
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import Adminlayout from "@/components/layouts/Adminlayout";
+import Sidebar from "@/components/Sidebar";
+import Image from "next/image";
+import { useState } from "react";
 
 export default function AdminDashboard() {
-    const [isLoading, setIsLoading] = useState(true);
-    const router = useRouter();
+  // ✅ Define state inside the component
+  const [isOpen, setIsOpen] = useState(true);
 
-    useEffect(() => {
-        const token = localStorage.getItem("access_token");
-        const isStaff = localStorage.getItem("is_staff");
+  return (
+    <Adminlayout>
+    <div className="flex">
+      {/* ✅ Pass setIsOpen as a function */}
+      <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
 
-        // Validate admin access
-        if (!token || isStaff !== "true") {
-            router.push("/"); // Redirect non-admins to landing page
-        } else {
-            setIsLoading(false); // Allow rendering for admins
-        }
-    }, [router]);
+      <section className={`flex-1 transition-all duration-300 ${isOpen ? "ml-64" : "ml-20"} p-6`}>
+        <h1 className="text-primary text-center font-bold text-4xl font-poppins mb-4">
+          Admin Dashboard
+        </h1>
 
-    if (isLoading) {
-        return <div className="text-center text-xl font-semibold p-6">Loading...</div>;
-    }
-
-    return (
-        <section className="relative w-full h-screen flex items-center justify-center">
-            {/* Background Image */}
-            <img
-                src="https://miro.medium.com/v2/resize:fit:5120/1*42ebJizcUtZBNIZPmmMZ5Q.jpeg"
-                alt="Bookshelf Background"
-                className="absolute top-0 left-0 w-full h-full object-cover opacity-80"
-            />
-
-            {/* Overlay for Buttons */}
-            <div className="relative z-10 flex  items-center space-x-4">
-                <button
-                    onClick={() => router.push("/admin/manage-books")}
-                    className="w-64 bg-blue-600 text-white py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300"
-                >
-                    Manage Books
-                </button>
-                <button
-                    onClick={() => router.push("/admin/manage-reviews")}
-                    className="w-64 bg-green-600 text-white py-3 rounded-lg text-lg font-semibold shadow-lg hover:bg-green-700 transition duration-300"
-                >
-                    Manage Reviews
-                </button>
-            </div>
-        </section>
-    );
+        <div className="relative">
+          <Image
+            src="https://thumbs.dreamstime.com/b/old-book-flying-letters-magic-light-background-bookshelf-library-ancient-books-as-symbol-knowledge-history-218640948.jpg"
+            alt="Bookshelf Background"
+            width={1000}
+            height={400}
+            className="opacity-250"
+          />
+        </div>
+      </section>
+    </div>
+    </Adminlayout>
+  );
 }

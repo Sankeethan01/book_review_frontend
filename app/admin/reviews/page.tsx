@@ -4,11 +4,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import DataTable from "react-data-table-component";
 import API from "@/utils/api";
+import Sidebar from "@/components/Sidebar";
+import Adminlayout from "@/components/layouts/Adminlayout";
 
 export default function ManageReviews() {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+
+    const [isOpen, setIsOpen] = useState(true);
 
     // Refresh the access token if expired
     const refreshAccessToken = async () => {
@@ -44,8 +48,7 @@ export default function ManageReviews() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log("API Response:", response.data); 
-            setReviews(response.data); // Store reviews in state
+            setReviews(response.data);
             setLoading(false);
         } catch (error: any) {
             if (error.response?.status === 401 && error.response?.data?.code === "token_not_valid") {
@@ -98,17 +101,17 @@ export default function ManageReviews() {
     const columns = [
         {
             name: "Book Title",
-            selector: (row: any) => row.book?.title || "No Title", // Handle missing book or title
+            selector: (row: any) => row.book?.title || "No Title",
             sortable: true,
         },
         {
             name: "Reviewer",
-            selector: (row: any) => row.user || "Unknown", // Handle missing user
+            selector: (row: any) => row.user || "Unknown",
             sortable: true,
         },
         {
             name: "Rating",
-            selector: (row: any) => row.rating || "N/A", // Handle missing rating
+            selector: (row: any) => row.rating || "N/A",
             sortable: true,
             style: {
                 maxWidth: "80px",
@@ -117,14 +120,14 @@ export default function ManageReviews() {
         },
         {
             name: "Review",
-            selector: (row: any) => row.comment || "No Comment", // Handle missing comment
+            selector: (row: any) => row.comment || "No Comment",
         },
         {
             name: "Actions",
             cell: (row: any) => (
                 <button
                     onClick={() => handleDeleteReview(row.id)}
-                    className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                    className="bg-red-600 text-white px-3 py-3 rounded-md shadow-md hover:bg-red-700 transition"
                 >
                     Delete
                 </button>
@@ -133,10 +136,13 @@ export default function ManageReviews() {
     ];
 
     return (
-        <div className="p-6">
-            <h1 className="text-3xl font-bold mb-4">Manage Reviews</h1>
-            <p>Here you can moderate or delete user reviews.</p>
-            <div className="mt-6">
+        <Adminlayout>
+        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
+        
+        <div className={`flex-1 transition-all duration-300 ${isOpen ? "ml-64" : "ml-20"} p-6`}>
+            <h1 className="text-4xl text-center font-bold mb-6 text-primary">Manage Reviews</h1>
+            <p className="text-center text-primary mb-6">Here you can moderate or delete user reviews.</p>
+            <div className="bg-white shadow-lg rounded-lg p-6">
                 <DataTable
                     columns={columns}
                     data={reviews}
@@ -144,8 +150,27 @@ export default function ManageReviews() {
                     pagination
                     highlightOnHover
                     responsive
+                    customStyles={{
+                        headCells: {
+                            style: {
+                                fontSize: '1.2rem',
+                                backgroundColor: '#131044',
+                                color: 'white',
+                                padding: '12px',
+                            },
+                        },
+                        rows: {
+                            style: {
+                                fontSize: '1rem',
+                                padding: '10px',
+                                backgroundColor: '#f9fafb',
+                                borderBottom: '2px solid #e5e7eb',
+                            },
+                        },
+                    }}
                 />
             </div>
         </div>
+        </Adminlayout>
     );
 }

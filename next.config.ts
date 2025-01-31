@@ -9,7 +9,8 @@ const nextConfig: NextConfig = {
       "books.google.com", // Google Books API
       "lh3.googleusercontent.com", // Google-related images
       "m.media-amazon.com",
-      "img.pikbest.com"
+      "img.pikbest.com",
+      "thumbs.dreamstime.com",
     ],
   },
 };
