@@ -13,6 +13,13 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        aboreto: ["Aboreto", "cursive"],
+        alegreya: ["Alegreya SC", "serif"],
+        agbalumo: ["Agbalumo", "cursive"],
+        poppins: ["Poppins", "sans-serif"],
+      },
+      
     },
   },
   plugins: [],

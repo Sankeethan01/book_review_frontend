@@ -22,13 +22,13 @@ export default function Navbar() {
       <div className="container mx-auto flex justify-between items-center py-2 px-4">
         {/* Logo */}
         <div className="flex items-center space-x-3">
-          <img src="/book_review_logo.jpg" alt="Book Review Logo" width={80} height={80} />
+          <img src="/book_review_logo.jpg" alt="Book Review Logo" width={110} height={80} />
         </div>
 
         {/* Centered Title & Subtitle */}
         <div className="text-center flex flex-col items-center">
-          <h1 className="text-6xl font-bold text-primary">TBD READS</h1>
-          <p className="text-md text-primary mt-1">
+          <h1 className="text-7xl font-bold text-primary font-agbalumo">TBD READS</h1>
+          <p className="text-xl text-primary mt-1 font-bold font-alegreya">
             Discover, share, and review your favorite books.
           </p>
         </div>
@@ -38,14 +38,14 @@ export default function Navbar() {
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className="bg-primary text-white px-3 py-2 rounded hover:bg-red-700"
+              className="bg-primary text-white px-4 py-2 rounded hover:bg-red-700"
             >
               Logout
             </button>
           ) : (
             <>
               <Link href="/login">
-                <button className="px-3 py-3 mt-2 text-white bg-primary rounded-lg hover:bg-blue-900 w-20">
+                <button className="px-4 py-3 mt-2 text-white bg-primary rounded-lg hover:bg-blue-900 w-20">
                   Login
                 </button>
               </Link>
@@ -64,26 +64,26 @@ export default function Navbar() {
 
       {/* Second Row: Navigation & Search */}
       <div className="bg-white shadow-md w-full py-2">
-        <div className="container mx-auto flex justify-between items-center px-4">
+        <div className="container mx-auto flex justify-center items-center px-4">
           {/* Navigation Links */}
-          <nav className="flex space-x-4">
+          <nav className="flex space-x-8">
             <Link href="/">
-              <button className="px-3 py-2 text-white bg-primary rounded-lg hover:bg-blue-900">
+              <button className="px-4 py-2 text-white bg-primary rounded-lg hover:bg-blue-900">
                 Home
               </button>
             </Link>
             <Link href="/books">
-              <button className="px-3 py-2 text-white bg-primary rounded-lg hover:bg-blue-900">
+              <button className="px-4 py-2 text-white bg-primary rounded-lg hover:bg-blue-900">
                 Books
               </button>
             </Link>
             <Link href="/about">
-              <button className="px-3 py-2 text-white bg-primary rounded-lg hover:bg-blue-900">
+              <button className="px-4 py-2 text-white bg-primary rounded-lg hover:bg-blue-900">
                 About
               </button>
             </Link>
             <Link href="/contact">
-              <button className="px-3 py-2 text-white bg-primary rounded-lg hover:bg-blue-900">
+              <button className="px-4 py-2 text-white bg-primary rounded-lg hover:bg-blue-900">
                 Contact
               </button>
             </Link>

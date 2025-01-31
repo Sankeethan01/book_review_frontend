@@ -33,7 +33,7 @@ export default function About () {
           {/* Button */}
           <div className="flex justify-center md:justify-start mt-6">
             <a
-              href="/contact"  // Replace with the appropriate link
+              href="/"  // Replace with the appropriate link
               className="inline-block px-8 py-3 text-white bg-indigo-600 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out transform hover:bg-indigo-700 hover:scale-105"
             >
               Join Our Community
