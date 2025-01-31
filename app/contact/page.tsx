@@ -1,5 +1,7 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
+import SecondaryNavbar from "@/components/SecondaryNavbar";
 import { useState } from "react";
 
 export default function ContactUs() {
@@ -30,6 +32,8 @@ export default function ContactUs() {
   };
 
   return (
+    <>
+    <SecondaryNavbar />
     <div className="min-h-screen flex items-center justify-center ">
       <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 bg-white shadow-2xl rounded-lg p-10 ">
         {/* Image Section */}
@@ -111,5 +115,6 @@ export default function ContactUs() {
         </div>
       </div>
     </div>
+    </>
   );
 }

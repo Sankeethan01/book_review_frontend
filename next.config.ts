@@ -11,6 +11,17 @@ const nextConfig: NextConfig = {
       "m.media-amazon.com",
       "img.pikbest.com",
       "thumbs.dreamstime.com",
+      "cdn.britannica.com",
+    ],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "img.freepik.com", // ✅ Allow Freepik images
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com", // ✅ Allow Unsplash images
+      }
     ],
   },
 };

@@ -4,15 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import DataTable from "react-data-table-component";
 import API from "@/utils/api";
-import Sidebar from "@/components/Sidebar";
-import Adminlayout from "@/components/layouts/Adminlayout";
+import AdminNavbar from "@/components/AdminNavbar";
 
 export default function ManageReviews() {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
-
-    const [isOpen, setIsOpen] = useState(true);
 
     // Refresh the access token if expired
     const refreshAccessToken = async () => {
@@ -136,10 +133,9 @@ export default function ManageReviews() {
     ];
 
     return (
-        <Adminlayout>
-        <Sidebar isOpen={isOpen} setIsOpen={setIsOpen} />
-        
-        <div className={`flex-1 transition-all duration-300 ${isOpen ? "ml-64" : "ml-20"} p-6`}>
+        <>
+        <AdminNavbar />
+        <div className={`flex-1 transition-all duration-300 p-6`}>
             <h1 className="text-4xl text-center font-bold mb-6 text-primary">Manage Reviews</h1>
             <p className="text-center text-primary mb-6">Here you can moderate or delete user reviews.</p>
             <div className="bg-white shadow-lg rounded-lg p-6">
@@ -171,6 +167,6 @@ export default function ManageReviews() {
                 />
             </div>
         </div>
-        </Adminlayout>
+        </>
     );
 }

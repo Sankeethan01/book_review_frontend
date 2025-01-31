@@ -1,9 +1,10 @@
+import SecondaryNavbar from "@/components/SecondaryNavbar";
+import Link from "next/link";
+
 export default function About () {
   return (
-    
-     
-
-     
+    <>
+    <SecondaryNavbar />
       <div className="bg-gray-50 py-16 px-4">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Image */}
@@ -32,18 +33,16 @@ export default function About () {
 
           {/* Button */}
           <div className="flex justify-center md:justify-start mt-6">
-            <a
-              href="/"  // Replace with the appropriate link
+            <Link
+              href="/" 
               className="inline-block px-8 py-3 text-white bg-indigo-600 rounded-lg text-lg font-semibold transition-all duration-300 ease-in-out transform hover:bg-indigo-700 hover:scale-105"
             >
               Join Our Community
-            </a>
+            </Link>
           </div>
           </div>
         </div>
       </div>
-
-      
-    
+  </>
   );
 };

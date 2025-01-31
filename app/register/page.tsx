@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import API from "@/utils/api";
+import SecondaryNavbar from "@/components/SecondaryNavbar";
 
 export default function Register() {
     const [username, setUsername] = useState("");
@@ -24,6 +25,8 @@ export default function Register() {
     };
 
     return (
+        <>
+        <SecondaryNavbar />
         <div className="flex flex-col items-center  h-screen bg-gray-100 px-6 py-6 pt-24">
             {/* Card Container */}
             <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md">
@@ -80,5 +83,6 @@ export default function Register() {
                 </p>
             </div>
         </div>
+        </>
     );
 }

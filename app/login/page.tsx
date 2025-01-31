@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import API from "@/utils/api";
+import SecondaryNavbar from "@/components/SecondaryNavbar";
 
 export default function Login() {
     const [username, setUsername] = useState("");
@@ -32,6 +33,8 @@ export default function Login() {
     };
 
     return (
+        <>
+          <SecondaryNavbar />
         <div className="flex flex-col items-center  h-screen bg-gray-100 px-6 py-6 pt-24">
             <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-md">
                 {/* Title */}
@@ -80,6 +83,7 @@ export default function Login() {
                 </p>
             </div>
         </div>
+        </>
     );
     
 }
